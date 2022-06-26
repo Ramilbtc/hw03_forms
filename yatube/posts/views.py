@@ -29,11 +29,19 @@ def index(request):
 
 
 def group_posts(request, slug):
+    """Function sorts the data and sends it to the template."""
     group = get_object_or_404(Group, slug=slug)
-    posts = Post.objects.filter(group=group).order_by('-pub_date')[:LIM_POST]
+    post_list = group.posts.all()
+    paginator = Paginator(post_list, LIM_POST)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    title = group.title
+    description = group.description
     context = {
         'group': group,
-        'posts': posts,
+        'page_obj': page_obj,
+        'title': title,
+        'description': description,
     }
     return render(request, 'posts/group_list.html', context)
 

@@ -18,19 +18,19 @@ urlpatterns = [
     # выход из аккаунта и показ прощальной страницы
     path(
         'logout/',
-        LogoutView.as_view(template_name='users/logged_out.html'),  # прямо тут можно указать шаблон для view-класса
+        LogoutView.as_view(template_name='users/logged_out.html'),
         name='logout',
     ),
     # смена пароля
     path(
         'password_change/',
-        PasswordChangeView.as_view(template_name='password_change'),
-        name='password_change',
+        PasswordChangeView.as_view(template_name='users/password_change_form.html'),
+        name='password_change_form',
     ),
     # сообщение об успешном изменении пароля
     path(
         'password_change/done/',
-        PasswordChangeDoneView.as_view(template_name='password_change_done'),
+        PasswordChangeDoneView.as_view(template_name='users/password_change_done.html'),
         name='password_change_done',
     ),
     # восстановление/сброс пароля
@@ -48,13 +48,13 @@ urlpatterns = [
     # вход по ссылке для восстановления пароля
     path(
         'reset/<uidb64>/<token>/',
-        PasswordResetConfirmView.as_view(template_name='password_reset_confirm'),
+        PasswordResetConfirmView.as_view(template_name='users/password_reset_confirm.html'),
         name='password_reset_confirm',
     ),
     # успешная смена пароля
     path(
         'reset/done/',
-        PasswordResetCompleteView.as_view(template_name='password_reset_complete'),
+        PasswordResetCompleteView.as_view(template_name='users/password_reset_complete.html'),
         name='password_reset_complete',
     ),
 
