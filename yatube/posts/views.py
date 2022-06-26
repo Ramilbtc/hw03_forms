@@ -4,14 +4,9 @@ from .models import Post, Group, User
 
 from django.core.paginator import Paginator
 
-from django.contrib.auth import get_user_model
-
 from .forms import PostForm
 
 from django.contrib.auth.decorators import login_required
-
-
-User = get_user_model()
 
 
 LIM_POST: int = 10
@@ -124,16 +119,14 @@ def post_edit(request, post_id):
                     request,
                     'posts/create_post.html',
                     {'form': form,
-                    'is_edit': True,
-                    'post': post
-                    }
+                     'is_edit': True,
+                     'post': post}
                 )
         else:
             form = PostForm(instance=post)
             context = {'form': form,
-                    'is_edit': True,
-                    'post': post
-                    }
+                       'is_edit': True,
+                       'post': post}
         return render(request, 'posts/create_post.html', context)
     else:
         return redirect('posts:post_detail', post_id=post_id)
