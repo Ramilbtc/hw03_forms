@@ -1,12 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 
 from .models import Post, Group, User
-
-from django.core.paginator import Paginator
-
 from .forms import PostForm
-
-from django.contrib.auth.decorators import login_required
 
 
 LIM_POST: int = 10
@@ -43,7 +40,7 @@ def group_posts(request, slug):
 
 def profile(request, username):
     author = User.objects.get(username=username)
-    post_list = Post.objects.filter(author=author)
+    post_list = author.posts.all()
     paginator = Paginator(post_list, LIM_POST)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -55,9 +52,9 @@ def profile(request, username):
 
 
 def post_detail(request, post_id):
-    post = Post.objects.get(id=post_id)
+    post = get_object_or_404(Post, id=post_id)
     author_id = post.author_id
-    posts_count = Post.objects.filter(author=author_id).count()
+    posts_count = post.author.posts.count()
     author = User.objects.get(id=author_id)
     text = post.text
     title = text[:30]
@@ -74,34 +71,12 @@ def post_detail(request, post_id):
 @login_required
 def post_create(request):
     """Страница создания нового поста"""
-    if request.method == 'POST':
-        form = PostForm(request.POST or None)
-        if form.is_valid():
-            new_post = form.save(commit=False)
-            new_post.author = request.user
-            new_post.save()
-            return redirect('posts:profile', username=request.user)
-        else:
-            return render(request, 'posts/create_post.html', {'form': form})
-    else:
-        form = PostForm()
-    return render(request, 'posts/create_post.html', {'form': form})
-
-
-@login_required
-def post_create(request):
-    """Страница создания нового поста"""
-    if request.method == 'POST':
-        form = PostForm(request.POST or None)
-        if form.is_valid():
-            new_post = form.save(commit=False)
-            new_post.author = request.user
-            new_post.save()
-            return redirect('posts:profile', username=request.user)
-        else:
-            return render(request, 'posts/create_post.html', {'form': form})
-    else:
-        form = PostForm()
+    form = PostForm(request.POST or None)
+    if form.is_valid():
+        new_post = form.save(commit=False)
+        new_post.author = request.user
+        new_post.save()
+        return redirect('posts:profile', username=request.user)
     return render(request, 'posts/create_post.html', {'form': form})
 
 

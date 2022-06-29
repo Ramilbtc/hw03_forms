@@ -17,6 +17,12 @@
         <li>
           Дата публикации: {{ post.pub_date|date:"d E Y" }}
         </li>
+        </li>
+          <a href="{% url 'posts:post_detail' post.pk %}">подробная информация о посте</a>
+        </li>
+        </li>
+          <a href="{% url 'posts:profile' post.author %}">профиль пользователя</a>
+        </li>
       </ul>      
       <p>
         {{ post.text }}

@@ -21,7 +21,7 @@
             Автор: {{ author.get_full_name }}
           </li>
           <li class="list-group-item d-flex justify-content-between align-items-center">
-            Всего постов автора:  {{author.posts.count}}
+            Всего постов автора:  {{ author.posts.count }}
           </li>
           <li class="list-group-item">
             {% if post.group %}
@@ -32,11 +32,18 @@
             </li>
         </ul>
       </aside>
+      <div class="container py-3">
         <article class="col-12 col-md-9">
           <p>
-            {{post.text}}
+            {{ post.text }}
           </p>
+          {% if post.author == request.user %}
+          <a class="btn btn-primary" href="{% url "posts:post_edit" post.pk %}">
+            Редактировать запись
+          </a>
+          {% endif %} 
         </article>
+      </div>
     </div> 
     {% include 'posts/includes/paginator.html' %}
   </div> 
