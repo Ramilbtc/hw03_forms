@@ -55,7 +55,7 @@ def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     author_id = post.author_id
     posts_count = post.author.posts.count()
-    author = User.objects.get(id=author_id)
+    author = post.author
     text = post.text
     title = text[:30]
     context = {
@@ -84,24 +84,16 @@ def post_create(request):
 def post_edit(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     if request.user == post.author:
-        if request.method == "POST":
-            form = PostForm(request.POST, instance=post)
-            if form.is_valid():
-                form.save()
-                return redirect('posts:post_detail', post_id=post_id)
-            else:
-                return render(
-                    request,
-                    'posts/create_post.html',
-                    {'form': form,
-                     'is_edit': True,
-                     'post': post}
-                )
-        else:
-            form = PostForm(instance=post)
-            context = {'form': form,
-                       'is_edit': True,
-                       'post': post}
-        return render(request, 'posts/create_post.html', context)
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('posts:post_detail', post_id=post_id)
+        return render(
+            request,
+            'posts/create_post.html',
+            {'form': form,
+             'is_edit': True,
+             'post': post}
+        )
     else:
         return redirect('posts:post_detail', post_id=post_id)

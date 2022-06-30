@@ -2,9 +2,9 @@
 {% block title %} 
 {{ title }} 
 {% endblock %}
+{% block content %}
   <div class="container py-5"> 
     <div class="row">
-      {% block content %}
       <aside class="col-12 col-md-3">
         <ul class="list-group list-group-flush">
           <li class="list-group-item">
@@ -32,19 +32,18 @@
             </li>
         </ul>
       </aside>
-      <div class="container py-3">
-        <article class="col-12 col-md-9">
+      <article class="col-12 col-md-9">
+        <div class="container py-">  
           <p>
             {{ post.text }}
           </p>
           {% if post.author == request.user %}
           <a class="btn btn-primary" href="{% url "posts:post_edit" post.pk %}">
-            Редактировать запись
-          </a>
-          {% endif %} 
-        </article>
-      </div>
-    </div> 
-    {% include 'posts/includes/paginator.html' %}
-  </div> 
+            редактировать запись
+          </a>   
+          {%endif%}
+        </div>
+      </article>
+    </div>
+  </div>
 {% endblock %}
