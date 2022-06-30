@@ -53,7 +53,6 @@ def profile(request, username):
 
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    author_id = post.author_id
     posts_count = post.author.posts.count()
     author = post.author
     text = post.text
